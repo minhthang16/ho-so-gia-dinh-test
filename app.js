@@ -1,6 +1,6 @@
 /* Hồ sơ nhà mình — phiên bản 1.0 — hoạt động tại thiết bị, không gửi dữ liệu ra máy chủ. */
 'use strict';
-const APP_VERSION = '3.1.0-TEST';
+const APP_VERSION = '3.2.0-TEST';
 const DB_NAME = 'HoSoNhaMinh_Encrypted_V1';
 const PBKDF2_ITERATIONS = 250000;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
@@ -222,7 +222,7 @@ async function decryptVault(box,key){const raw=await decryptBytes({iv:box.iv,dat
 async function persist(){vaultMeta={...vaultMeta,cipher:await encryptVault(state,vaultKey),updatedAt:new Date().toISOString()};await dbPut('meta','vault',vaultMeta);}
 async function beginVault(password){state=emptyVault();const salt=crypto.getRandomValues(new Uint8Array(16));vaultKey=await deriveKey(password,salt);vaultMeta={schema:1,salt:b64(salt),iterations:PBKDF2_ITERATIONS,createdAt:new Date().toISOString(),cipher:await encryptVault(state,vaultKey)};await dbPut('meta','vault',vaultMeta);showApp();}
 async function unlock(password){const key=await deriveKey(password,unb64(vaultMeta.salt));const v=await decryptVault(vaultMeta.cipher,key);vaultKey=key;state=v;showApp();}
-function lockApp(){if(typeof syncEnd==='function')syncEnd();vaultKey=null;state=null;activeEdit=null;backupPending=null;if($('#modal').open)$('#modal').close();$('#mainApp').classList.add('hidden');$('#authScreen').classList.remove('hidden');renderAuth(false);}
+function lockApp(){closeAttachmentPreview();if(typeof syncEnd==='function')syncEnd();vaultKey=null;state=null;activeEdit=null;backupPending=null;if($('#modal').open)$('#modal').close();$('#mainApp').classList.add('hidden');$('#authScreen').classList.remove('hidden');renderAuth(false);}
 function authError(msg){const box=$('#authError');if(box){box.textContent=msg;box.classList.remove('hidden');}}
 function renderAuth(isNew){$('#authContent').innerHTML=`<div class="auth-panel"><h2>${isNew?'Thiết lập hồ sơ riêng':'Mở kho hồ sơ'}</h2><p>${isNew?'Tạo mật khẩu để mã hóa giấy tờ ngay trên thiết bị.':'Nhập mật khẩu bạn đã tạo để xem dữ liệu.'}</p><form id="authForm" data-mode="${isNew?'create':'unlock'}"><label for="authPassword">Mật khẩu ${isNew?'(ít nhất 8 ký tự)':''}</label><input id="authPassword" type="password" autocomplete="${isNew?'new-password':'current-password'}" required minlength="${isNew?8:1}" placeholder="Nhập mật khẩu">${isNew?'<label for="authConfirm">Nhập lại mật khẩu</label><input id="authConfirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Xác nhận mật khẩu">':''}<p id="authError" class="auth-error hidden"></p><button class="primary-btn full" type="submit">${isNew?'Tạo kho hồ sơ':'Mở ứng dụng'}</button></form></div>`;}
 function showApp(){lastActive=Date.now();$('#authScreen').classList.add('hidden');$('#mainApp').classList.remove('hidden');activeView='home';render();}
@@ -247,7 +247,7 @@ function heading(title){return `<div class="modal-head"><h2>${esc(title)}</h2><b
 function field(label,name,value='',type='text',opts=''){return `<div class="form-field"><label for="f_${name}">${label}</label><input id="f_${name}" name="${name}" type="${type}" value="${esc(value)}" ${opts}></div>`;}
 function textarea(label,name,value=''){return `<div class="form-field"><label for="f_${name}">${label}</label><textarea id="f_${name}" name="${name}">${esc(value)}</textarea></div>`;}
 function selectField(label,name,options,opts=''){return `<div class="form-field"><label for="f_${name}">${label}</label><select id="f_${name}" name="${name}" ${opts}>${options}</select></div>`;}
-function attachmentList(files,editable=false){if(!files?.length)return '<p class="form-help">Chưa có tệp đính kèm.</p>';return files.map(a=>`<div class="attachment-row" data-attachment-row="${esc(a.id)}"><span>📎 ${esc(a.name)} <small>(${prettySize(a.size)})</small></span><button type="button" data-download="${esc(a.id)}">Tải</button>${editable?`<button type="button" class="remove" data-attachment-remove="${esc(a.id)}">Xóa</button>`:''}</div>`).join('');}
+function attachmentList(files,editable=false){if(!files?.length)return '<p class="form-help">Chưa có tệp đính kèm.</p>';return files.map(a=>`<div class="attachment-row" data-attachment-row="${esc(a.id)}"><span>📎 ${esc(a.name)} <small>(${prettySize(a.size)})</small></span><button type="button" class="attachment-view-btn" data-preview="${esc(a.id)}">Xem</button><button type="button" data-download="${esc(a.id)}">Tải</button>${editable?`<button type="button" class="remove" data-attachment-remove="${esc(a.id)}">Xóa</button>`:''}</div>`).join('');}
 function getRecord(id){return state.records.find(r=>r.id===id);}
 function recordForm(id){
   const r=getRecord(id)||{module:'personal',typeId:state.categories.records.personal[0]?.id,owner:'family',title:'',number:'',issuedAt:'',expiresAt:'',issuer:'',notes:'',details:{},attachments:[]};
@@ -307,10 +307,42 @@ function categoryForm(kind,group,id){
   </form>`;
 }
 function openModal(kind,id,extra){const modal=$('#modal');let contents='';if(kind==='new-record')contents=recordForm();if(kind==='edit-record')contents=recordForm(id);if(kind==='view-record')contents=recordDetail(id);if(kind==='new-member')contents=memberForm();if(kind==='edit-member')contents=memberForm(id);if(kind==='view-member')contents=memberDetail(id);if(kind==='new-tx')contents=txForm(null,extra);if(kind==='edit-tx')contents=txForm(id);if(kind==='view-tx')contents=txDetail(id);if(kind==='categories')contents=categoryEditor(id);if(kind==='category-form')contents=categoryForm(id,extra?.group|| (id==='record'?'personal':'expense'),extra?.catId);if(kind==='quick-add')contents=`${heading('Bạn muốn thêm gì?')}<div class="list"><button class="setting-item" data-action="new-record"><strong>▤ Hồ sơ & giấy tờ</strong><span class="right-arrow">›</span></button><button class="setting-item" data-action="new-member"><strong>♧ Thành viên</strong><span class="right-arrow">›</span></button><button class="setting-item" data-action="new-income"><strong>↗ Khoản thu</strong><span class="right-arrow">›</span></button><button class="setting-item" data-action="new-expense"><strong>↘ Khoản chi</strong><span class="right-arrow">›</span></button></div>`;if(kind==='restore')contents=`${heading('Khôi phục sao lưu')}<p class="subtext">File sao lưu sẽ <strong>thay thế toàn bộ dữ liệu hiện tại</strong> trên thiết bị. Hãy sao lưu dữ liệu hiện tại trước.</p><form id="editorForm" data-kind="restore">${field('Mật khẩu của bản sao lưu <span class="req">*</span>','password','','password','required autocomplete="off"')}<div class="modal-footer"><button type="button" class="secondary-btn" data-action="close-modal">Hủy</button><button type="submit" class="danger-btn">Khôi phục dữ liệu</button></div></form>`;if(kind==='change-password')contents=`${heading('Thay đổi mật khẩu')}<p class="subtext">Ứng dụng sẽ mã hóa lại toàn bộ hồ sơ và tệp đính kèm. Nên tạo bản sao lưu trước.</p><form id="editorForm" data-kind="change-password">${field('Mật khẩu đang dùng','old','','password','required autocomplete="current-password"')}${field('Mật khẩu mới (ít nhất 8 ký tự)','password','','password','required minlength="8" autocomplete="new-password"')}${field('Xác nhận mật khẩu mới','confirm','','password','required minlength="8" autocomplete="new-password"')}<div class="modal-footer"><button type="button" class="secondary-btn" data-action="close-modal">Hủy</button><button type="submit" class="primary-btn">Đổi mật khẩu</button></div></form>`;if(!contents)return;$('#modalBody').innerHTML=contents;if(!modal.open)modal.showModal();$('#modalBody').scrollTop=0;if(kind==='new-record'||kind==='edit-record')setRecordCommonLabels($('#f_module').value);}
-function closeModal(){const m=$('#modal');if(m.open)m.close();activeEdit=null;backupPending=null;}
+function closeModal(){closeAttachmentPreview();const m=$('#modal');if(m.open)m.close();activeEdit=null;backupPending=null;}
 async function storeFiles(input){const files=[...input?.files||[]];for(const f of files)if(f.size>MAX_FILE_BYTES)throw new Error('File '+f.name+' vượt 15 MB.');const added=[];try{for(const f of files){const id=uid();const enc=await encryptBytes(await f.arrayBuffer(),vaultKey);await dbPut('files',id,enc);added.push({id,name:f.name,size:f.size,mime:f.type||'application/octet-stream'});}return added;}catch(e){for(const f of added)await dbDelete('files',f.id).catch(()=>{});throw e;}}
 async function removeFiles(ids){for(const id of ids)await dbDelete('files',id);}
 async function downloadAttachment(id){const row=await dbGet('files',id);if(!row){toast('Không tìm thấy tệp đính kèm.');return;}const ref=[...state.records,...state.transactions].flatMap(x=>x.attachments||[]).find(a=>a.id===id);if(!ref){toast('Tệp không còn trong danh mục.');return;}try{const data=await decryptBytes(row,vaultKey);saveBlob(new Blob([data],{type:ref.mime||'application/octet-stream'}),ref.name||'tep-dinh-kem');}catch(e){toast('Không thể giải mã tệp.');}}
+// V3.2: local-only attachment preview. Do not render active HTML/SVG or use external viewers.
+let previewEpoch=0, previewURL='';
+function attachmentPreviewKind(bytes,name,mime){
+  const b=new Uint8Array(bytes), at=(i,...v)=>v.every((x,j)=>b[i+j]===x), str=(i,v)=>at(i,...Array.from(v,x=>x.charCodeAt(0)));
+  if(at(0,255,216,255))return ['image','image/jpeg'];
+  if(at(0,137,80,78,71,13,10,26,10))return ['image','image/png'];
+  if(str(0,'GIF87a')||str(0,'GIF89a'))return ['image','image/gif'];
+  if(str(0,'RIFF')&&str(8,'WEBP'))return ['image','image/webp'];
+  if(str(0,'BM'))return ['image','image/bmp'];
+  if(str(0,'%PDF-'))return ['pdf','application/pdf'];
+  if(/\.txt$/i.test(name||'')||mime==='text/plain')return ['text','text/plain'];
+  return ['unsupported','application/octet-stream'];
+}
+function clearAttachmentPreview(){previewEpoch++;if(previewURL){URL.revokeObjectURL(previewURL);previewURL='';}const d=$('#attachmentPreview');if(d){d.querySelector('.preview-content').replaceChildren();d.querySelector('.preview-title').textContent='';d.querySelector('.preview-download').onclick=null;}}
+function closeAttachmentPreview(){const d=$('#attachmentPreview');clearAttachmentPreview();if(d?.open)d.close();}
+function attachmentPreviewDialog(){let d=$('#attachmentPreview');if(d)return d;d=document.createElement('dialog');d.id='attachmentPreview';d.setAttribute('aria-labelledby','previewHeading');d.innerHTML='<header class="preview-head"><div><h2 id="previewHeading">Xem tệp đính kèm</h2><div class="preview-title"></div></div><button type="button" class="close-btn preview-close" aria-label="Đóng tệp">×</button></header><div class="preview-content"></div><footer class="preview-footer"><button type="button" class="secondary-btn preview-back">Đóng</button><button type="button" class="primary-btn preview-download">Tải tệp</button></footer>';document.body.appendChild(d);d.querySelector('.preview-close').onclick=closeAttachmentPreview;d.querySelector('.preview-back').onclick=closeAttachmentPreview;d.addEventListener('cancel',e=>{e.preventDefault();closeAttachmentPreview();});d.addEventListener('close',()=>{if(!d.open)clearAttachmentPreview();});return d;}
+async function previewAttachment(id){
+  if(!state||!vaultKey)return;
+  const ref=[...state.records,...state.transactions].flatMap(x=>x.attachments||[]).find(a=>a.id===id);
+  if(!ref){toast('Không tìm thấy tệp đính kèm.');return;}
+  const d=attachmentPreviewDialog();clearAttachmentPreview();const epoch=previewEpoch,key=vaultKey,session=state;
+  const live=()=>epoch===previewEpoch&&key===vaultKey&&session===state&&d.open;
+  const body=d.querySelector('.preview-content'),button=d.querySelector('.preview-download');
+  d.querySelector('.preview-title').textContent=ref.name||'Tệp đính kèm';body.textContent='Đang giải mã tệp…';button.disabled=true;if(!d.open)d.showModal();
+  try{const row=await dbGet('files',id);if(!live())return;if(!row)throw new Error('Tệp không tồn tại trên thiết bị.');const data=await decryptBytes(row,key);if(!live())return;
+    const [kind,mime]=attachmentPreviewKind(data,ref.name,ref.mime);body.replaceChildren();button.disabled=false;button.onclick=()=>{if(live())saveBlob(new Blob([data],{type:ref.mime||'application/octet-stream'}),ref.name||'tep-dinh-kem');};
+    if(kind==='image'){previewURL=URL.createObjectURL(new Blob([data],{type:mime}));const image=document.createElement('img');image.alt='Ảnh đính kèm';image.src=previewURL;image.onerror=()=>{if(live())body.textContent='Trình duyệt không đọc được ảnh này. Hãy chọn Tải tệp.';};body.appendChild(image);}
+    else if(kind==='pdf'){previewURL=URL.createObjectURL(new Blob([data],{type:mime}));const hint=document.createElement('p');hint.className='preview-note';hint.textContent='Nếu PDF không hiển thị trên thiết bị này, hãy chọn Tải tệp để mở bằng trình đọc PDF.';const frame=document.createElement('iframe');frame.title='Tài liệu PDF';frame.src=previewURL;frame.referrerPolicy='no-referrer';body.append(hint,frame);}
+    else if(kind==='text'){const pre=document.createElement('pre');const limit=1024*1024;pre.textContent=new TextDecoder().decode(new Uint8Array(data).subarray(0,limit))+(data.byteLength>limit?'\n… Chỉ hiển thị 1 MB đầu. Tải tệp để đọc đầy đủ.':'');body.appendChild(pre);}
+    else body.textContent='Loại tệp này chưa hỗ trợ xem trực tiếp. Chọn Tải tệp để mở bằng ứng dụng phù hợp (Word, Excel, v.v.).';
+  }catch(e){if(live()){body.textContent='Không thể mở tệp: '+e.message;button.disabled=true;}}
+}
 function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);}
 async function saveEditor(form){const data=new FormData(form),kind=form.dataset.kind;const v=n=>String(data.get(n)||'').trim();const n=v=>Number(data.get(v));if(kind==='member'){const name=v('name');if(!name)throw new Error('Cần nhập họ tên.');const member={id:activeEdit.id||uid(),name,relation:v('relation'),birth:v('birth'),phone:v('phone'),notes:v('notes'),createdAt:state.members.find(m=>m.id===activeEdit.id)?.createdAt||new Date().toISOString()};const i=state.members.findIndex(m=>m.id===member.id);if(i<0)state.members.push(member);else state.members[i]=member;await persist();closeModal();render();toast('Đã lưu thành viên.');return;}
   if(kind==='record'||kind==='transaction'){
@@ -357,6 +389,7 @@ document.addEventListener('click',async ev=>{
     if(t.hasAttribute('data-edit-tx')){openModal('edit-tx',t.dataset.editTx);return;}
     if(t.hasAttribute('data-member-records')){recordOwnerFilter=t.dataset.memberRecords;activeRecordTab='all';closeModal();navigate('records');filterRecordsUI();return;}
     if(t.hasAttribute('data-attachment-remove')){if(activeEdit?.remove){activeEdit.remove.add(t.dataset.attachmentRemove);t.closest('.attachment-row').classList.add('hidden');}return;}
+    if(t.hasAttribute('data-preview')){await previewAttachment(t.dataset.preview);return;}
     if(t.hasAttribute('data-download')){await downloadAttachment(t.dataset.download);return;}
     if(t.hasAttribute('data-cat-edit')){const [kind,group,id]=t.dataset.catEdit.split('|');openModal('category-form',kind,{group,catId:id});return;}
     if(t.hasAttribute('data-cat-add')){openModal('category-form',t.dataset.catAdd);return;}

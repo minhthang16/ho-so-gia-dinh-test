@@ -1,7 +1,7 @@
 "use strict";
 const PREFIX='hsgd-static:'+self.registration.scope+':';
-const CACHE=PREFIX+'3.2.3';
-const ASSETS=['./','./index.html','./styles.css?v=3.2.3','./app.js?v=3.2.3','./sync.js?v=3.2.3','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+const CACHE=PREFIX+'3.3.0';
+const ASSETS=['./','./index.html','./styles.css?v=3.3.0','./app.js?v=3.3.0','./sync.js?v=3.3.0','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 const URLS=new Set(ASSETS.map(x=>new URL(x,self.registration.scope).href));
 const ENTRY=new URL('./index.html',self.registration.scope).href;
 const ROOT=new URL('./',self.registration.scope).href;

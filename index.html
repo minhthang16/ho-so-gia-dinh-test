@@ -12,8 +12,8 @@
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=3.2.3">
-  <title>Hồ sơ nhà mình – V3.2.3 TEST</title>
+  <link rel="stylesheet" href="./styles.css?v=3.3.0">
+  <title>Hồ sơ nhà mình – V3.3.0 TEST</title>
 </head>
 <body>
   <div class="app-shell">
@@ -27,15 +27,16 @@
         <h1>Hồ sơ<br><em>nhà mình.</em></h1>
         <p class="auth-intro">Giấy tờ, sức khỏe, nhà đất và tài chính — gọn gàng, dễ tìm, luôn trong tầm tay.</p>
         <div id="authContent"></div>
-        <p class="auth-privacy"><span aria-hidden="true">🔒</span> Dữ liệu được mã hóa và lưu ngay trên thiết bị này. · V3.2.3</p>
+        <p class="auth-privacy"><span aria-hidden="true">🔒</span> Dữ liệu được mã hóa và lưu ngay trên thiết bị này. · V3.3.0</p>
       </div>
     </section>
 
     <section id="mainApp" class="main-app hidden" aria-label="Ứng dụng Hồ sơ nhà mình">
       <header class="topbar">
-        <div class="topbar-title"><div class="small-mark" aria-hidden="true">⌂</div><div><span class="topbar-overline">QUẢN LÝ GIA ĐÌNH · V3.2.3</span><strong id="pageTitle">Tổng quan</strong></div></div>
+        <div class="topbar-title"><div class="small-mark" aria-hidden="true">⌂</div><div><span class="topbar-overline">QUẢN LÝ GIA ĐÌNH · V3.3.0</span><strong id="pageTitle">Tổng quan</strong></div></div>
         <button class="round-icon" id="topLock" title="Khóa ứng dụng" aria-label="Khóa ứng dụng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button>
       </header>
+      <button id="syncTopStatus" type="button" data-action="sync-drive" class="secondary-btn full" style="margin:0;border-radius:0;font-size:12px;min-height:34px;white-space:normal;overflow-wrap:anywhere" aria-live="polite">Đồng bộ Drive · Chưa kết nối</button>
       <main id="view" class="main-content"></main>
       <button id="fab" class="fab" aria-label="Thêm mới" title="Thêm mới"><span>＋</span></button>
       <nav class="bottom-nav" aria-label="Điều hướng chính">
@@ -51,7 +52,7 @@
   <dialog id="modal" aria-modal="true"><div id="modalBody"></div></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <input id="backupFile" type="file" accept=".hsgd,.json,application/json" class="hidden" aria-label="Chọn tệp sao lưu">
-  <script src="./app.js?v=3.2.3" defer></script>
-  <script src="./sync.js?v=3.2.3" defer></script>
+  <script src="./app.js?v=3.3.0" defer></script>
+  <script src="./sync.js?v=3.3.0" defer></script>
 </body>
 </html>

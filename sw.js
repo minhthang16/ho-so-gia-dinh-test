@@ -1,7 +1,8 @@
 "use strict";
+/* V3.3.0 UI01 - cache refresh for the additional presentation-only stylesheet. */
 const PREFIX='hsgd-static:'+self.registration.scope+':';
-const CACHE=PREFIX+'3.3.0';
-const ASSETS=['./','./index.html','./styles.css?v=3.3.0','./app.js?v=3.3.0','./sync.js?v=3.3.0','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+const CACHE=PREFIX+'3.3.0-ui01';
+const ASSETS=['./','./index.html','./styles.css?v=3.3.0','./compact.css?v=3.3.0-ui01','./app.js?v=3.3.0','./sync.js?v=3.3.0','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 const URLS=new Set(ASSETS.map(x=>new URL(x,self.registration.scope).href));
 const ENTRY=new URL('./index.html',self.registration.scope).href;
 const ROOT=new URL('./',self.registration.scope).href;

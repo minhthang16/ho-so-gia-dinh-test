@@ -1,0 +1,144 @@
+/* HO SO GIA DINH — UI02 V05, 2026-11-20
+ * UI-only layer over styles.css and compact.css. Does not alter data, crypto, sync.
+ * The main view is rendered by app.js, with markup adapted by ui02.js.
+ */
+#syncTopStatus{display:none!important} /* Status remains available in Settings > Drive */
+.ui02-greeting{display:none;align-items:baseline;gap:7px;min-width:0;margin-left:4px;padding-left:14px;border-left:1px solid #d4e0d6;line-height:1.35}
+.ui02-greeting-kicker{font-size:10px;letter-spacing:.8px;font-weight:800;color:#21796b;white-space:nowrap}
+.ui02-greeting-text{font-size:13px;font-weight:650;color:#334e45;min-width:0}
+.main-app:has([data-nav="home"].active) .ui02-greeting{display:flex}
+.main-app:has([data-nav="home"].active) #fab{display:none!important} /* One add button only */
+
+.ui02-overview-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px!important}
+.ui02-overview-caption{font-size:12px;font-weight:850;color:#4c665c;letter-spacing:.55px;line-height:1.2}
+.ui02-add-record{min-height:40px;white-space:nowrap;padding:8px 13px;font-size:12px;border-radius:10px}
+
+/* 4 statistics — icon, label and value in the same line */
+.four-stats.ui02-stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;align-items:stretch;gap:9px;margin:0 0 4px!important}
+.ui02-stats .stat-card{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;min-width:0;min-height:46px;padding:10px 12px;border-radius:12px;white-space:nowrap}
+.ui02-stats .stat-ico{font-size:16px;line-height:1;margin:0;flex:0 0 17px}
+.ui02-stats .stat-label{font-size:clamp(9px,.89vw,11px);line-height:1.2;font-weight:800;letter-spacing:-.15px;color:#536e61;margin:0;white-space:nowrap}
+.ui02-stats .stat-num{font-size:15px!important;letter-spacing:0!important;line-height:1.1;margin:0;color:#19483c;font-weight:850;white-space:nowrap}
+
+/* 4 record categories — same one-line rule as statistics */
+.category-grid.ui02-categories{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0}
+.ui02-categories .category-card{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;min-height:46px;min-width:0;border-radius:12px;padding:10px 12px;white-space:nowrap;text-align:left}
+.ui02-categories .category-card .cat-icon{display:grid;place-items:center;width:20px;height:20px;flex:0 0 20px;border-radius:6px;font-size:12px;line-height:1;margin:0}
+.ui02-categories .ui02-cat-label{font-size:clamp(9px,.85vw,11px);color:#536e61;font-weight:800;letter-spacing:-.15px;line-height:1.2;white-space:nowrap}
+.ui02-categories .ui02-cat-count{display:inline;flex:0 0 auto;font-size:15px;line-height:1.1;color:#19483c;font-weight:850;margin:0;white-space:nowrap}
+
+/* Compact empty expiry notice; normal alerts grow with content */
+.ui02-watch-empty{display:flex;align-items:center;text-align:left;gap:10px;padding:10px 13px!important;min-height:0!important;border-radius:12px;overflow:visible}
+.ui02-watch-empty .ui02-watch-icon{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:#edf7f0;color:#237a5c;display:grid;place-items:center;font-size:17px;line-height:1}
+.ui02-watch-empty .ui02-watch-copy{min-width:0;flex:1}
+.ui02-watch-empty .ui02-watch-copy strong{font-size:12px;font-weight:750;display:block;margin:0 0 2px;line-height:1.3}
+.ui02-watch-empty .ui02-watch-copy p{font-size:11px;line-height:1.35;margin:0;max-width:none;color:#75857a}
+.ui02-watch-list .list-card{min-height:0;padding:9px 11px}
+
+/* Recently updated: three one-line links, full detail remains on open */
+.list.ui02-recent{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px;align-items:stretch}
+.ui02-recent .record-card{min-width:0;min-height:44px;padding:8px 10px;align-items:center;gap:8px;white-space:nowrap;overflow:hidden}
+.ui02-recent .record-icon{width:24px;height:24px;min-width:24px;border-radius:7px;font-size:13px;line-height:1}
+.ui02-recent .card-text{min-width:0;flex:1}
+.ui02-recent .card-title{font-size:12px;line-height:1.2;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ui02-recent .card-meta,.ui02-recent .chip,.ui02-recent .card-text>div[style]{display:none!important}
+.ui02-recent .card-trail{font-size:19px;line-height:1;color:#839a90;flex:0 0 auto}
+
+/* section title / row spacing kept consistent, including statistics */
+.main-app:has([data-nav="home"].active) .main-content{padding-top:12px}
+.main-app:has([data-nav="home"].active) .section-head{margin:15px 0 7px}
+.main-app:has([data-nav="home"].active) .section-head h3{font-size:13px}
+
+@media (min-width:700px) and (max-width:1000px){
+  .ui02-stats .stat-card,.ui02-categories .category-card{gap:5px;padding:9px 7px}
+  .ui02-stats .stat-label,.ui02-categories .ui02-cat-label{font-size:9px}
+}
+@media (max-width:699px){
+  .ui02-greeting{flex-direction:column;align-items:flex-start;gap:0;margin-left:0;padding-left:9px;min-width:0;line-height:1.14}
+  .ui02-greeting-kicker{font-size:8px;letter-spacing:0;white-space:normal}
+  .ui02-greeting-text{font-size:10px;line-height:1.14;white-space:normal}
+  .topbar{gap:7px}
+  .ui02-overview-caption{font-size:11px}
+  .ui02-add-record{min-height:40px;padding:8px 10px;font-size:11px}
+  .four-stats.ui02-stats{display:flex!important;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;gap:7px;padding-bottom:4px;margin-bottom:0!important;overscroll-behavior-x:contain}
+  .category-grid.ui02-categories{display:flex!important;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;gap:7px;padding-bottom:4px;overscroll-behavior-x:contain}
+  .ui02-stats::-webkit-scrollbar,.ui02-categories::-webkit-scrollbar,.ui02-recent::-webkit-scrollbar{display:none}
+  .ui02-stats .stat-card,.ui02-categories .category-card{flex:0 0 auto;min-width:max-content;scroll-snap-align:start;min-height:44px;padding:9px 11px;gap:6px}
+  .ui02-stats .stat-label,.ui02-categories .ui02-cat-label{font-size:11px}
+  .list.ui02-recent{display:flex!important;flex-direction:row;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;gap:7px;padding-bottom:4px;overscroll-behavior-x:contain}
+  .ui02-recent .record-card{flex:0 0 192px;min-width:192px;height:44px;min-height:44px;scroll-snap-align:start}
+  .ui02-watch-empty{padding:9px 10px!important;gap:8px}
+  .ui02-watch-empty .ui02-watch-icon{flex-basis:25px;width:25px;height:25px;font-size:15px}
+  .ui02-watch-empty .ui02-watch-copy strong{font-size:11px}
+  .ui02-watch-empty .ui02-watch-copy p{font-size:10px}
+}
+@media (max-width:370px){
+  .ui02-greeting{padding-left:7px}
+  .ui02-greeting-kicker{font-size:7.5px}
+  .ui02-greeting-text{font-size:9px}
+  .ui02-overview-caption{font-size:10px}
+  .ui02-stats .stat-card,.ui02-categories .category-card{padding:8px 10px}
+}
+/* Compact tablets: show a complete one-line metric rather than clipping value. */
+@media (min-width:700px) and (max-width:799px){
+  .four-stats.ui02-stats{display:flex!important;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;gap:8px;padding-bottom:4px}
+  .four-stats.ui02-stats::-webkit-scrollbar{display:none}
+  .ui02-stats .stat-card{flex:0 0 auto;min-width:max-content;scroll-snap-align:start;padding:9px 11px}
+  .ui02-stats .stat-label{font-size:10px}
+}
+
+
+/* UI02 V05 — recent list: compact single rows, at most 5 visible, scroll after. */
+.main-app .list.ui02-recent{
+  --ui02-recent-row:44px;
+  --ui02-recent-gap:7px;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:var(--ui02-recent-gap)!important;
+  max-height:calc(5 * var(--ui02-recent-row) + 4 * var(--ui02-recent-gap) + 2px);
+  height:auto!important;
+  min-height:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  scroll-snap-type:none!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:#a1baad transparent;
+  padding:0 5px 2px 0!important;
+  margin:0!important;
+  overscroll-behavior-y:contain;
+}
+.main-app .ui02-recent::-webkit-scrollbar{display:block!important;width:6px;height:6px}
+.main-app .ui02-recent::-webkit-scrollbar-thumb{background:#a1baad;border-radius:8px}
+.main-app .ui02-recent .record-card{
+  display:flex!important;
+  width:100%!important;
+  flex:0 0 var(--ui02-recent-row)!important;
+  min-width:0!important;
+  min-height:var(--ui02-recent-row)!important;
+  height:var(--ui02-recent-row)!important;
+  padding:7px 11px!important;
+  gap:10px!important;
+  scroll-snap-align:none!important;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.main-app .ui02-recent .card-text{flex:1 1 auto;min-width:0!important}
+.main-app .ui02-recent .card-title.ui02-recent-name{
+  display:flex!important;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+  text-overflow:clip;
+}
+.ui02-recent-title{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto;font-size:12px;font-weight:730}
+.ui02-recent-number{display:inline-block;flex:0 0 auto;font-size:16px;line-height:1.1;font-weight:900;color:#19483c;letter-spacing:0;margin:0 3px 0 0}
+.main-app:has([data-nav="home"].active) .footer-caption{margin-top:12px}
+@media(max-width:699px){
+  .main-app .list.ui02-recent{display:flex!important;flex-direction:column!important;overflow-y:auto!important;overflow-x:hidden!important;max-height:calc(5 * 44px + 4 * 7px + 2px)}
+  .main-app .ui02-recent .record-card{flex:0 0 44px!important;min-width:0!important;width:100%!important;scroll-snap-align:none!important}
+  .main-app .ui02-recent .card-title.ui02-recent-name{gap:9px}
+}

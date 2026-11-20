@@ -1,15 +1,31 @@
 {
-  "name":"Hồ sơ nhà mình – Quản lý hồ sơ gia đình",
-  "short_name":"Hồ sơ nhà mình",
-  "description":"Quản lý hồ sơ gia đình với biểu mẫu nhập riêng cho 75 loại hồ sơ, thu chi và đính kèm.",
-  "lang":"vi",
-  "start_url":"./index.html",
-  "scope":"./",
-  "display":"standalone",
-  "background_color":"#f7f7f3",
-  "theme_color":"#145f55",
-  "icons":[
-    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  "name": "Hồ sơ nhà mình – Quản lý hồ sơ gia đình",
+  "short_name": "Hồ sơ nhà mình",
+  "description": "Quản lý hồ sơ gia đình với biểu mẫu nhập riêng cho 75 loại hồ sơ, thu chi và đính kèm.",
+  "lang": "vi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f3",
+  "theme_color": "#145f55",
+  "icons": [
+    {
+      "src": "./icons/icon-family-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-family-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

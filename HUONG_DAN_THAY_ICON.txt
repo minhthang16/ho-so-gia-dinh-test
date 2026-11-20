@@ -1,0 +1,41 @@
+HỒ SƠ NHÀ MÌNH — THAY ICON PWA V02 — 20/11/2026
+
+MỤC TIÊU
+- Thay biểu tượng cài đặt Android/PWA, Apple Touch Icon, favicon (trình duyệt) và ảnh xem trước khi chia sẻ link.
+- Dùng icon đã duyệt: Nhà, gia đình, cặp hồ sơ, dòng chữ “HỒ SƠ GIA ĐÌNH”.
+- Không sửa app.js, sync.js, styles.css, compact.css, ui02.css, ui02.js hay cơ sở dữ liệu.
+
+MÃ GỐC XÁC NHẬN TRƯỚC KHI SỬA
+- Repo: minhthang16/ho-so-gia-dinh-test, nhánh main.
+- index.html: blob SHA c813f17a7fbc0b0ec81604e1809486071ac58e45
+- sw.js: blob SHA 00f34ed86036fd81ae9d8c9e62335caac6373702
+- manifest.webmanifest: blob SHA c88f40a3dba8b5a31887a4dc92ff67f505522d89
+Nếu repo thay đổi sau thời điểm này, không thay đè index.html/sw.js bằng bản cũ khi chưa đối chiếu.
+
+CẬP NHẬT GITHUB PAGES
+1. Mở repo https://github.com/minhthang16/ho-so-gia-dinh-test trên tài khoản có quyền ghi.
+2. Đưa các tệp trong ZIP vào đúng vị trí GỐC repo, giữ nguyên thư mục icons.
+   Thay: index.html, sw.js, manifest.webmanifest, icons/icon-192.png, icons/icon-512.png.
+   Thêm: các PNG tên có v2 trong thư mục icons.
+3. Commit vào nhánh main đang dùng để xuất GitHub Pages.
+4. Link dự kiến: https://minhthang16.github.io/ho-so-gia-dinh-test/
+   Lưu ý link live chưa kiểm chứng phản hồi trong môi trường này; sau commit hãy mở kiểm tra.
+5. Mở trang trong Chrome/Edge/Safari và tải lại. Trong tab trình duyệt sẽ có favicon mới.
+6. Với PWA đã cài: hệ điều hành có thể giữ icon cũ lâu. ĐỪNG xóa app trước khi tạo và xác nhận
+   bản sao lưu .hsgd hoặc bản sao lưu Drive đáng tin cậy: tháo app có thể xóa dữ liệu cục bộ.
+
+CHÚ Ý BẢO MẬT
+- Chỉ đăng MÃ ứng dụng và icon lên GitHub.
+- KHÔNG tải các file .hsgd, hình giấy tờ, dữ liệu hồ sơ hoặc mật khẩu lên repo.
+
+DANH SÁCH FILE TRONG BỘ NÀY
+index.html (chỉ cập nhật favicon, touch icon, social preview)
+manifest.webmanifest (icon PWA any + maskable)
+sw.js (chỉ đổi version cache, danh sách tệp icon; giữ nguyên logic fetch)
+icons/icon-192.png, icons/icon-512.png (thay icon mặc định)
+icons/icon-family-192-v2.png, icons/icon-family-512-v2.png (đường dẫn mới để xóa cache icon cũ)
+icons/icon-maskable-512-v2.png
+icons/apple-touch-icon-v2.png, icons/favicon-32-v2.png, icons/favicon-48-v2.png
+
+LƯU Ý PHẠM VI
+Đây là GÓI THAY THẾ ICON, không phải toàn bộ app. KHÔNG xóa các file khác trong repository.
